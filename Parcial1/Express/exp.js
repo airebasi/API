@@ -1,11 +1,13 @@
 const express = require('express');
 const app = express();
-const cors = require('cors');
+//const cors = require('cors');
 
-app.use(cors());
+//app.use(cors());
 
+
+//Mi falla era que lo tenia como send y no como json.apply
 app.get('/', (req, res) => {
-    res.send('Server Express contestando a peticion GET');
+    res.json.apply('Server Express contestando a peticion GET');
 });
 
 app.post('/', (req, res) => {
