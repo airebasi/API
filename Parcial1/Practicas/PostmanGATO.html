@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GATITOS :D</title>
+</head>
+<body>
+    <header>FETCH de gatitos</header>
+    <textarea name="text" id="text">Scottish fold</textarea>
+    <button name="button" id="button">Buscar</button>
+    
+    <div>
+        <img id="catImage" alt="Imagen de gato" style="max-width: 500px; margin-top: 20px;">
+        <div>
+            <text id="info" class="info"></text> <!--Esto nada mas para cuestiones esteticas-->
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('button').addEventListener('click', function() {
+            const breedName = document.getElementById('text').value.toLowerCase().trim();
+            const info = document.getElementById('info');
+            
+            // Limpiar cualquier mensaje de error en caso de que se corrija correctamente el nombre
+            info.textContent = '';
+
+            // Obtencion del ID
+            fetch('https://api.thecatapi.com/v1/breeds')
+                .then(response => response.json())
+                .then(breeds => {
+                    const breedData = breeds.find(b => b.name.toLowerCase() === breedName);
+                    if (breedData) {
+                        const breedId = breedData.id;
+                        fetch(`https://api.thecatapi.com/v1/images/search?breed_ids=${breedId}`)
+                            .then(response => response.json())
+                            .then(images => {
+                                if (images.length > 0) {
+                                    const randomImage = images[Math.floor(Math.random() * images.length)];
+                                    const imageUrl = randomImage.url;
+                                    document.getElementById('catImage').src = imageUrl;
+                                } else {
+                                    fetch('https://api.thecatapi.com/v1/images/search')
+                                        .then(response => response.json())
+                                        .then(images => {
+                                            if (images.length > 0) {
+                                                const randomImage = images[Math.floor(Math.random() * images.length)];
+                                                const imageUrl = randomImage.url;
+                                                document.getElementById('catImage').src = imageUrl;
+                                                info.textContent = 'No se encontraron imágenes para la raza especificada. Mostrando una imagen aleatoria.';
+                                            }
+                                        })
+                                        .catch(error => {
+                                            console.error('Error al obtener una imagen aleatoria:', error);
+                                        });
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error al obtener las imágenes de la raza:', error);
+                            });
+                    } else {
+            // La raza no se encuentra
+                        fetch('https://api.thecatapi.com/v1/images/search')
+                            .then(response => response.json())
+                            .then(images => {
+                                if (images.length > 0) {
+                                    const randomImage = images[Math.floor(Math.random() * images.length)];
+                                    const imageUrl = randomImage.url;
+                                    document.getElementById('catImage').src = imageUrl;
+                                    info.textContent = 'No se encontró la raza especificada. Mostrando una imagen aleatoria.';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error al obtener una imagen aleatoria:', error);
+                            });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al obtener las razas:', error);
+                });
+        });
+
+        //
+    </script>
+
+    <!--Todo esto debe ser en xammp-->
+    <!--Si se queda atascado, cambiar el puerto o cerrar el proceso e internar de nuevo-->
+</body>
+</html>

@@ -1,2 +1,2 @@
 **INFORMACION**
-Repositorio de desarrollo API REST
+<p>Repositorio de desarrollo API REST</p>
