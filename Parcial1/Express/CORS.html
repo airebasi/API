@@ -3,22 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba GET</title>
 </head>
 <body>
-    <text>Prueba GET con CORS</text>
-    <button id="fetchData">Hacer Solicitud GET</button>
-    <p id="response"></p>
+    <form id="form">
+        <textarea name="txtRes" id="resultado"></textarea>
+        <br>
+        <button id="btnConsole" type="submit">Get</button>
+        <button id="btnJs" type="button">GetJS</button>
+    </form>
 
     <script>
-        document.getElementById('fetchData').addEventListener('click', () => {
-            fetch('http://localhost:3000/')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('response').innerText = data;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('form');
+            const resultTextArea = document.getElementById('resultado');
+
+            document.getElementById('btnJs').addEventListener('click', () => {
+                fetch('http://localhost:3000/')
+                    .then(response => response.text())
+                    .then(data => {
+                        resultTextArea.value = data;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        resultTextArea.value = 'Error al realizar la solicitud.';
+                    });
+            });
+            //El error estaba en el orden que ejecutaba los comandos, no tenia la version mas reciente
+            //Ni tampoco tenia bien puestos los puertos, debia tener 2 activos 
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+
+                fetch('http://localhost:3000/')
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
         });
     </script>
 </body>
