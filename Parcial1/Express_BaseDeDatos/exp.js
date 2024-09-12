@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
+//const mysql = require('mysql2');
 const mysql = require('mysql2/promise');
 const bodyParser = require('body-parser');
 const bodyParserXml = require('body-parser-xml');
@@ -34,13 +35,13 @@ let connection;
 })();
 
 //--------------------------------------NOTAS--------------------------------//
-//Implementar POST Y DELETE (Para mañana)
 //El POST debe validar que los tipos de datos concuerden (int,decimal,string,char,etc)
-//Implementar DELETE
+//Implementar DELETE //LEER NOTAS PARA CORRECCION
 //Implementar PATCH/PUT (Para el miercoles, martes es de habilidades blandas)
 
 //Despues del app.get, deberia de registrar una funcion ()=>{} mas en mi caso estropea las consultas
 
+//      GET     /    CONSULTA     //
 //SOLO SE POSICIONA NEXT SI SE VA A USAR (,next)
 app.get('/alumno', async (req, res, next) => {
   try {
@@ -83,6 +84,67 @@ app.get('/alumno', async (req, res, next) => {
     console.error('Error al consultar la base de datos:', err);
     res.json({ error: 'Error al consultar la base de datos', details: err.message });
   }
+});
+
+//EDITAR POST Y DELETE, PARA QUE AMBOS SE PUBLIQUEN Y BORREN DE LA MISMA FORMA//
+//    POST   //
+app.post('/alumno', async (req, res) => {
+  try {
+    const { ID, Nombre, ApellidoPaterno, ApellidoMaterno, Carrera } = req.body;
+
+    // Consultar si el ID ya existe
+    const [existing] = await connection.execute('SELECT * FROM Alumno WHERE ID = ?', [ID]);
+    if (existing.length > 0) {
+      return res.json({ error: 'El ID ya existe' });
+    }
+
+    const [result] = await connection.execute(
+      'INSERT INTO Alumno (ID, Nombre, ApellidoPaterno, ApellidoMaterno, Carrera) VALUES (?, ?, ?, ?, ?)',
+      [ID, Nombre, ApellidoPaterno, ApellidoMaterno, Carrera]
+    );
+
+    res.json({ message: 'Registro realizado'});
+  } catch (err) {
+    console.error('Error al insertar en la base de datos:', err);
+    res.json({ error: 'Error al insertar en la base de datos', details: err.message });
+  }
+});
+
+//    DELETE    //
+app.delete('/alumno/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const [result] = await connection.execute('DELETE FROM Alumno WHERE ID = ?', [id]);
+
+    if (result.affectedRows === 0) {
+      return res.json({ error: 'Registro no encontrado' });
+    }
+
+    res.json({ message: 'Registro eliminado con éxito' });
+  } catch (err) {
+    console.error('Error al eliminar de la base de datos:', err);
+    res.json({ error: 'Error al eliminar de la base de datos', details: err.message });
+  }
+});
+
+// NO SIRVE POR EL MOMENTO PUT/PACTH
+app.put('/alumno/:id', (req, res) => {
+  const queryParams = req.query;
+  const routeParams = req.params;
+  const body = req.body;
+
+  // Agregar los otros campos solo para saber cómo funciona
+  console.log('Query Parameters:', queryParams);
+  console.log('Route Parameters:', routeParams);
+  console.log('Request Body:', body);
+
+  res.json({
+    mensaje: 'Server Express contestando a petición PUT',
+    queryParams: queryParams,
+    routeParams: routeParams,
+    body: body
+  });
 });
 
 app.listen(3000, () => {
