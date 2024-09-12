@@ -22,7 +22,7 @@ app.put('/clientes/:id', (req, res) => {
     const routeParams = req.params;
     const body = req.body;
 
-    //Agregue los otros campos solo para saber como funciona
+    //Agregue los otros campos solo para saber como funcionax
     console.log('Query Parameters:', queryParams);
     console.log('Route Parameters:', routeParams);
     console.log('Request Body:', body);
