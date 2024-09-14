@@ -36,49 +36,29 @@ let connection;
 
 //--------------------------------------NOTAS--------------------------------//
 //El POST debe validar que los tipos de datos concuerden (int,decimal,string,char,etc)
-//Implementar DELETE //LEER NOTAS PARA CORRECCION
 //Implementar PATCH/PUT (Para el miercoles, martes es de habilidades blandas)
 
 //Despues del app.get, deberia de registrar una funcion ()=>{} mas en mi caso estropea las consultas
 
-//      GET     /    CONSULTA     //
-//SOLO SE POSICIONA NEXT SI SE VA A USAR (,next)
-app.get('/alumno', async (req, res, next) => {
+//      GET     //
+app.get('/alumno/:id?', async (req, res) => {
   try {
-    const { ID, Nombre, ApellidoPaterno, ApellidoMaterno, Carrera } = req.query;
-    let consulta = 'SELECT * FROM Alumno WHERE 1=1';
+    const { id } = req.params;
+
+    let consulta = 'SELECT * FROM Alumno';
     const params = [];
 
-    if (ID) {
-      consulta += ' AND ID = ?';
-      params.push(ID);
+    if (id) {
+      consulta += ' WHERE ID = ?';
+      params.push(id);
     }
-    if (Nombre) {
-      consulta += ' AND Nombre LIKE ?';
-      params.push(`%${Nombre}%`);
-    }
-    if (ApellidoPaterno) {
-      consulta += ' AND ApellidoPaterno LIKE ?';
-      params.push(`%${ApellidoPaterno}%`);
-    }
-    if (ApellidoMaterno) {
-      consulta += ' AND ApellidoMaterno LIKE ?';
-      params.push(`%${ApellidoMaterno}%`);
-    }
-    if (Carrera) {
-      consulta += ' AND Carrera LIKE ?';
-      params.push(`%${Carrera}%`);
-    }
-
-    //Para debugging
-    //console.log('Consulta SQL:', consulta);
 
     const [results] = await connection.execute(consulta, params);
 
     if (results.length === 0) {
       return res.json({ error: "No se encontró el registro" });
-      next(err)
     }
+
     res.json(results);
   } catch (err) {
     console.error('Error al consultar la base de datos:', err);
@@ -86,13 +66,11 @@ app.get('/alumno', async (req, res, next) => {
   }
 });
 
-//EDITAR POST Y DELETE, PARA QUE AMBOS SE PUBLIQUEN Y BORREN DE LA MISMA FORMA//
 //    POST   //
 app.post('/alumno', async (req, res) => {
   try {
     const { ID, Nombre, ApellidoPaterno, ApellidoMaterno, Carrera } = req.body;
 
-    // Consultar si el ID ya existe
     const [existing] = await connection.execute('SELECT * FROM Alumno WHERE ID = ?', [ID]);
     if (existing.length > 0) {
       return res.json({ error: 'El ID ya existe' });
@@ -128,24 +106,6 @@ app.delete('/alumno/:id', async (req, res) => {
   }
 });
 
-// NO SIRVE POR EL MOMENTO PUT/PACTH
-app.put('/alumno/:id', (req, res) => {
-  const queryParams = req.query;
-  const routeParams = req.params;
-  const body = req.body;
-
-  // Agregar los otros campos solo para saber cómo funciona
-  console.log('Query Parameters:', queryParams);
-  console.log('Route Parameters:', routeParams);
-  console.log('Request Body:', body);
-
-  res.json({
-    mensaje: 'Server Express contestando a petición PUT',
-    queryParams: queryParams,
-    routeParams: routeParams,
-    body: body
-  });
-});
 
 app.listen(3000, () => {
   console.log('Server Express escuchando en puerto 3000');
