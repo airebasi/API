@@ -106,6 +106,52 @@ app.delete('/alumno/:id', async (req, res) => {
   }
 });
 
+//    PUT/PACTH   //
+app.put('/alumno/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { Nombre, ApellidoPaterno, ApellidoMaterno, Carrera } = req.body;
+
+    if (!Nombre && !ApellidoPaterno && !ApellidoMaterno && !Carrera) {
+      return res.json({ error: 'No se proporcionaron datos para actualizar' });
+    }
+    let consulta = 'UPDATE Alumno SET ';
+    const params = [];
+
+    if (Nombre) {
+      consulta += 'Nombre = ?, ';
+      params.push(Nombre);
+    }
+    if (ApellidoPaterno) {
+      consulta += 'ApellidoPaterno = ?, ';
+      params.push(ApellidoPaterno);
+    }
+    if (ApellidoMaterno) {
+      consulta += 'ApellidoMaterno = ?, ';
+      params.push(ApellidoMaterno);
+    }
+    if (Carrera) {
+      consulta += 'Carrera = ?, ';
+      params.push(Carrera);
+    }
+
+    consulta = consulta.slice(0, -2);
+    consulta += ' WHERE ID = ?';
+    params.push(id);
+
+    const [result] = await connection.execute(consulta, params);
+
+    if (result.affectedRows === 0) {
+      return res.json({ error: 'Registro no encontrado' });
+    }
+
+    res.json({ message: 'Registro actualizado con éxito' });
+  } catch (err) {
+    console.error('Error al actualizar en la base de datos:', err);
+    res.json({ error: 'Error al actualizar en la base de datos', details: err.message });
+  }
+});
+
 
 app.listen(3000, () => {
   console.log('Server Express escuchando en puerto 3000');
