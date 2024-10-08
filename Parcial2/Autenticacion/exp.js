@@ -35,10 +35,11 @@ let connection;
 })();
 
 //--------------------------------------NOTAS--------------------------------//
-//El POST debe validar que los tipos de datos concuerden (int,decimal,string,char,etc)
-//Implementar PATCH/PUT (Para el miercoles, martes es de habilidades blandas)
-
-//Despues del app.get, deberia de registrar una funcion ()=>{} mas en mi caso estropea las consultas
+//Errores sincronos (try-catch)
+//Errores asincronos (sync-await, callbacks, procceses) Errores asincronos (try-catch)
+//Error de tiempo de ejecucion y de desarrollador (manejamos estos)
+//Ya no se recomineda try-catch
+//const [enCasoDeError,respuestaPositiva] ?=  \\NO ESTA DISPONIBLE EN TODAS LAS VERSIONES
 
 //      GET     //
 app.get('/alumno/:id?', async (req, res) => {
