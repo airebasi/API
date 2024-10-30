@@ -1,0 +1,21 @@
+{
+  "name": "docAreaPastel",
+  "version": "1.0.0",
+  "description": "Formula sencilla que calcula el area rectangular de un pastel",
+  "main": "main.js",
+  "scripts": {
+    "docs": "esdoc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "doc": "jsdoc -c jsdoc.json"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "axios": "^0.21.1"
+  },
+  "devDependencies": {
+    "esdoc": "^1.0.0",
+    "jsdoc": "^3.6.6"
+  },
+  "author": "",
+  "license": "ISC"
+}

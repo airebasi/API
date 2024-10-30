@@ -1,0 +1,17 @@
+{
+    "title": "Área de un Pastel Rectangular",
+    "source": "./src",
+    "destination": "./docs",
+    "includes": [
+      "./src/Pastel.js"
+    ],
+    "excludes": [
+      "node_modules"
+    ],
+    "plugins": [
+      {
+        "name": "esdoc-standard-plugin"
+      }
+    ]
+  }
+  

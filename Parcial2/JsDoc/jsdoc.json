@@ -1,0 +1,11 @@
+{
+    "templates": {
+      "default": {
+        "staticFiles": {
+          "include": [
+              "./myproject/static"
+          ]
+        }
+      }
+    }
+  }

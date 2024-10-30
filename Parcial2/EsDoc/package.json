@@ -1,0 +1,16 @@
+{
+  "name": "documentacion",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "doc": "jsdoc -c jsdoc.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "esdoc": "^1.1.0",
+    "standard": "^17.1.2"
+  }
+}
